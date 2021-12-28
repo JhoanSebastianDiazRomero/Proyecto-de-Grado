@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tesis/screens/cursos_screen.dart';
 import './screens/login_screen.dart';
-import './screens/calificar_rubrica_screen.dart';
-import './screens/rubrica_screen.dart';
+import 'screens/rubrica_screen.dart';
+import 'screens/rubrica_detail_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,11 +21,6 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.teal,
           textTheme: GoogleFonts.robotoTextTheme(Theme.of(context).textTheme)),
       home: LoginScreen(),
-      routes: {
-        '/cursos': (context) => const CursosScreen(),
-        '/calificar': (context) => const CalificarRubricaScreen(),
-        '/rubrica': (context) => const RubricaScreen(),
-      },
     );
   }
 }
