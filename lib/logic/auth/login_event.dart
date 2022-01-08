@@ -7,7 +7,6 @@ class LoginUsernameChanged extends LoginEvent {
 
 class LoginPasswordChanged extends LoginEvent {
   final String password;
-
   LoginPasswordChanged({required this.password});
 }
 
