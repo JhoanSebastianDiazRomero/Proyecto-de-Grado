@@ -6,43 +6,48 @@ class RubricaState {
 
   int currentStep;
   String dropdownValue;
-  List<int> selectedRadioBtns;
 
-  List<bool> selectedList;
+  bool terminoCarga;
 
   RubricaState(
       {required this.rubrica,
       required this.estudiante,
       required this.currentStep,
       required this.dropdownValue,
-      required this.selectedRadioBtns,
-      required this.selectedList});
+      required this.terminoCarga});
 
-  RubricaState copyWith({
-    Rubrica? rubrica,
-    Estudiante? estudiante,
-    int? currentStep,
-    String? dropdownValue,
-    List<int>? selectedRadioBtns,
-    List<bool>? selectedList,
-  }) {
+  RubricaState copyWith(
+      {Rubrica? rubrica,
+      Estudiante? estudiante,
+      int? currentStep,
+      String? dropdownValue,
+      int? criterioSeleccionado,
+      List<String>? comentariosCriterios,
+      List<bool>? selectedList,
+      bool? terminoCarga}) {
     return RubricaState(
         rubrica: rubrica ?? this.rubrica,
         estudiante: estudiante ?? this.estudiante,
         currentStep: currentStep ?? this.currentStep,
         dropdownValue: dropdownValue ?? this.dropdownValue,
-        selectedRadioBtns: selectedRadioBtns ?? this.selectedRadioBtns,
-        selectedList: selectedList ?? this.selectedList);
+        terminoCarga: terminoCarga ?? this.terminoCarga);
   }
 }
 
 class RubricaStateInitial extends RubricaState {
   RubricaStateInitial()
       : super(
-            rubrica: Rubrica('', '', List<Criterio>.empty(), false, false, ''),
+            rubrica: Rubrica(
+                nombre: '',
+                descripcion: '',
+                criterios: List<Criterio>.empty(),
+                tieneProcedimientos: false,
+                procedimientosSeleccionados: List<String>.empty(),
+                tienePatologias: false,
+                patologiasSeleccionadas: List<String>.empty(),
+                comentarioGeneral: ''),
             estudiante: Estudiante('', ''),
             currentStep: 0,
             dropdownValue: 'Jhoan Sebastian Diaz Romero',
-            selectedRadioBtns: List<int>.filled(6, -1),
-            selectedList: List<bool>.empty());
+            terminoCarga: false);
 }
