@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tesis/logic/models/criterio.dart';
-import 'package:tesis/logic/models/criterio_item.dart';
 import 'package:tesis/logic/models/models.dart';
 import 'package:tesis/screens/rubrica_detail_screen.dart';
 
@@ -24,87 +22,122 @@ class CalificarRubricaScreen extends StatelessWidget {
 
     var criterios = List<Criterio>.from([
       Criterio(
-          'Hace una historia clínica completa y detallada del paciente pediátrico. Identifica y prioriza los diagnósticos diferenciales, conoce y usa adecuadamente las pruebas diagnosticas indicadas.',
-          items,
-          ''),
+          descripcion:
+              'Hace una historia clínica completa y detallada del paciente pediátrico. Identifica y prioriza los diagnósticos diferenciales, conoce y usa adecuadamente las pruebas diagnosticas indicadas.',
+          items: items,
+          comentario: ''),
       Criterio(
-          'Toma valores antropométricos, analiza percentil; valora el estado nutricional, la alimentación, salud bucal los hábitos y practica, hace evaluación ocular,  auditiva, identificación sexual, . ',
-          items,
-          ''),
+          descripcion:
+              'Toma valores antropométricos, analiza percentil; valora el estado nutricional, la alimentación, salud bucal los hábitos y practica, hace evaluación ocular,  auditiva, identificación sexual, . ',
+          items: items,
+          comentario: ''),
       Criterio(
-          'Toma valores antropométricos, analiza percentil; valora el estado nutricional, la alimentación, salud bucal los hábitos y practica, hace evaluación ocular,  auditiva, identificación sexual, . ',
-          items,
-          ''),
+          descripcion:
+              'Toma valores antropométricos, analiza percentil; valora el estado nutricional, la alimentación, salud bucal los hábitos y practica, hace evaluación ocular,  auditiva, identificación sexual, . ',
+          items: items,
+          comentario: ''),
       Criterio(
-          'Evalúa la conformación y dinámica familiar, situaciones de vulnerabilidad. Busca e identifica señales de stress, ansiedad, depresión, riesgo de violencia, maltrato, uso de tabaco, sustancias sicoactivas.  Maneja situaciones de riesgo, educa, remite para apoyar.',
-          items,
-          ''),
+          descripcion:
+              'Evalúa la conformación y dinámica familiar, situaciones de vulnerabilidad. Busca e identifica señales de stress, ansiedad, depresión, riesgo de violencia, maltrato, uso de tabaco, sustancias sicoactivas.  Maneja situaciones de riesgo, educa, remite para apoyar.',
+          items: items,
+          comentario: ''),
       Criterio(
-          'Evalúa la conformación y dinámica familiar, situaciones de vulnerabilidad. Busca e identifica señales de stress, ansiedad, depresión, riesgo de violencia, maltrato, uso de tabaco, sustancias sicoactivas.  Maneja situaciones de riesgo, educa, remite para apoyar.',
-          items,
-          ''),
+          descripcion:
+              'Evalúa la conformación y dinámica familiar, situaciones de vulnerabilidad. Busca e identifica señales de stress, ansiedad, depresión, riesgo de violencia, maltrato, uso de tabaco, sustancias sicoactivas.  Maneja situaciones de riesgo, educa, remite para apoyar.',
+          items: items,
+          comentario: ''),
       Criterio(
-          'El residente demuestra capacidad para diagnosticar y manejar  adecuadamente las enfermedades y situaciones clínicas frecuentes de la rotación.  Reconoce sus limitaciones y solicita ayuda.',
-          items,
-          ''),
+          descripcion:
+              'El residente demuestra capacidad para diagnosticar y manejar  adecuadamente las enfermedades y situaciones clínicas frecuentes de la rotación.  Reconoce sus limitaciones y solicita ayuda.',
+          items: items,
+          comentario: ''),
       Criterio(
-          'Se comunica adecuadamente con el paciente y familia, educa y orienta sobre el cuidado, crianza, recreación, actividad física, alimentación, salud oral, sexualidad, vacunación, etc.',
-          items,
-          ''),
+          descripcion:
+              'Se comunica adecuadamente con el paciente y familia, educa y orienta sobre el cuidado, crianza, recreación, actividad física, alimentación, salud oral, sexualidad, vacunación, etc.',
+          items: items,
+          comentario: ''),
       Criterio(
-          'Se comunica adecuadamente con el paciente y familia, educa y orienta sobre el cuidado, crianza, recreación, actividad física, alimentación, salud oral, sexualidad, vacunación, etc.',
-          items,
-          ''),
+          descripcion:
+              'Se comunica adecuadamente con el paciente y familia, educa y orienta sobre el cuidado, crianza, recreación, actividad física, alimentación, salud oral, sexualidad, vacunación, etc.',
+          items: items,
+          comentario: ''),
       Criterio(
-          'El residente  es  compasivo, se preocupa por  la privacidad  y autonomía del  paciente  y su familia ',
-          items,
-          '')
+          descripcion:
+              'El residente  es  compasivo, se preocupa por  la privacidad  y autonomía del  paciente  y su familia ',
+          items: items,
+          comentario: '')
     ]);
 
     var rubricas = List<Rubrica>.from([
       Rubrica(
-          'Consulta Observada',
-          'Desempeno del residente en rotacion de consulta externa',
-          criterios,
-          true,
-          true,
-          ''),
+          nombre: 'Consulta Observada',
+          descripcion:
+              'Desempeno del residente en rotacion de consulta externa',
+          criterios: criterios,
+          tieneProcedimientos: true,
+          procedimientosSeleccionados: List<String>.empty(),
+          tienePatologias: true,
+          patologiasSeleccionadas: List<String>.empty(),
+          comentarioGeneral: ''),
       Rubrica(
-          'Concepto Enfermeria',
-          'A continuacion encontrara la rubrica de evaluacion para solicitar el concepto a \"ENFERMERAS Y PERSONAL NO MEDICO\" sobre el comportamiento del residente en su sitio de trabajo. Por favor lea el item, luego senale el grado de desarrollo en que se encuentra el residente',
-          criterios,
-          true,
-          true,
-          ''),
+          nombre: 'Concepto Enfermeria',
+          descripcion:
+              'A continuacion encontrara la rubrica de evaluacion para solicitar el concepto a \"ENFERMERAS Y PERSONAL NO MEDICO\" sobre el comportamiento del residente en su sitio de trabajo. Por favor lea el item, luego senale el grado de desarrollo en que se encuentra el residente',
+          criterios: criterios,
+          tieneProcedimientos: true,
+          procedimientosSeleccionados: List<String>.empty(),
+          tienePatologias: true,
+          patologiasSeleccionadas: List<String>.empty(),
+          comentarioGeneral: ''),
       Rubrica(
-          'Concepto Enfermeria 2',
-          'A continuacion encontrara la rubrica de evaluacion para solicitar el concepto a \"ENFERMERAS Y PERSONAL NO MEDICO\" sobre el comportamiento del residente en su sitio de trabajo. Por favor lea el item, luego senale el grado de desarrollo en que se encuentra el residente',
-          criterios,
-          true,
-          true,
-          ''),
+          nombre: 'Concepto Enfermeria 2',
+          descripcion:
+              'A continuacion encontrara la rubrica de evaluacion para solicitar el concepto a \"ENFERMERAS Y PERSONAL NO MEDICO\" sobre el comportamiento del residente en su sitio de trabajo. Por favor lea el item, luego senale el grado de desarrollo en que se encuentra el residente',
+          criterios: criterios,
+          tieneProcedimientos: true,
+          procedimientosSeleccionados: List<String>.empty(),
+          tienePatologias: true,
+          patologiasSeleccionadas: List<String>.empty(),
+          comentarioGeneral: ''),
       Rubrica(
-          'Desempeño general de la rotación EV1',
-          "Le pedimos el ffavor lea el item y lo compare con la definicion de logro maximo a alcanzar (5), luego senale el grado de desarrollo en el que usted considera se encuentra el residente",
-          criterios,
-          true,
-          true,
-          ''),
+          nombre: 'Desempeño general de la rotación EV1',
+          descripcion:
+              "Le pedimos el ffavor lea el item y lo compare con la definicion de logro maximo a alcanzar (5), luego senale el grado de desarrollo en el que usted considera se encuentra el residente",
+          criterios: criterios,
+          tieneProcedimientos: true,
+          procedimientosSeleccionados: List<String>.empty(),
+          tienePatologias: true,
+          patologiasSeleccionadas: List<String>.empty(),
+          comentarioGeneral: ''),
       Rubrica(
-          'Revista Observada EV1',
-          'Rubrica de valoracion del desempeno en la atencion del paciente (REVISTA MEDICA)',
-          criterios,
-          true,
-          true,
-          ''),
+          nombre: 'Revista Observada EV1',
+          descripcion:
+              'Rubrica de valoracion del desempeno en la atencion del paciente (REVISTA MEDICA)',
+          criterios: criterios,
+          tieneProcedimientos: true,
+          procedimientosSeleccionados: List<String>.empty(),
+          tienePatologias: true,
+          patologiasSeleccionadas: List<String>.empty(),
+          comentarioGeneral: ''),
       Rubrica(
-          'Revista Observada EV2',
-          'Rubrica de valoracion del desempeno en la atencion del paciente (REVISTA MEDICA)',
-          criterios,
-          true,
-          true,
-          ''),
-      Rubrica("Mini CEX", "MiniCEX completo", criterios, true, true, '')
+          nombre: 'Revista Observada EV2',
+          descripcion:
+              'Rubrica de valoracion del desempeno en la atencion del paciente (REVISTA MEDICA)',
+          criterios: criterios,
+          tieneProcedimientos: true,
+          procedimientosSeleccionados: List<String>.empty(),
+          tienePatologias: true,
+          patologiasSeleccionadas: List<String>.empty(),
+          comentarioGeneral: ''),
+      Rubrica(
+          nombre: "Mini CEX",
+          descripcion: "MiniCEX completo",
+          criterios: criterios,
+          tieneProcedimientos: true,
+          procedimientosSeleccionados: List<String>.empty(),
+          tienePatologias: true,
+          patologiasSeleccionadas: List<String>.empty(),
+          comentarioGeneral: '')
     ]);
 
     return Scaffold(

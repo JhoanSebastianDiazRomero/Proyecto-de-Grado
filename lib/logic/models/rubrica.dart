@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:uuid/uuid.dart';
 import 'criterio.dart';
+import 'p_item.dart';
 
 //flutter pub run build_runner build
 part 'rubrica.g.dart';
@@ -14,30 +15,45 @@ class Rubrica {
   String descripcion;
   List<Criterio> criterios;
   bool tieneProcedimientos;
+  List<String> procedimientosSeleccionados;
   bool tienePatologias;
+  List<String> patologiasSeleccionadas;
   String comentarioGeneral;
 
-  Rubrica(this.nombre, this.descripcion, this.criterios,
-      this.tieneProcedimientos, this.tienePatologias, this.comentarioGeneral);
+  Rubrica(
+      {required this.nombre,
+      required this.descripcion,
+      required this.criterios,
+      required this.tieneProcedimientos,
+      required this.procedimientosSeleccionados,
+      required this.tienePatologias,
+      required this.patologiasSeleccionadas,
+      required this.comentarioGeneral});
+
+  Rubrica copyWith(
+      {String? nombre,
+      String? descripcion,
+      List<Criterio>? criterios,
+      bool? tieneProcedimientos,
+      List<String>? procedimientosSeleccionados,
+      bool? tienePatologias,
+      List<String>? patologiasSeleccionadas,
+      String? comentarioGeneral,
+      int? criterioSeleccionado}) {
+    return Rubrica(
+        nombre: nombre ?? this.nombre,
+        descripcion: descripcion ?? this.descripcion,
+        criterios: criterios ?? this.criterios,
+        tieneProcedimientos: tieneProcedimientos ?? this.tieneProcedimientos,
+        procedimientosSeleccionados:
+            procedimientosSeleccionados ?? this.procedimientosSeleccionados,
+        tienePatologias: tienePatologias ?? this.tienePatologias,
+        patologiasSeleccionadas:
+            patologiasSeleccionadas ?? this.patologiasSeleccionadas,
+        comentarioGeneral: comentarioGeneral ?? this.comentarioGeneral);
+  }
 
   factory Rubrica.fromJson(Map<String, dynamic> json) =>
       _$RubricaFromJson(json);
   Map<String, dynamic> toJson() => _$RubricaToJson(this);
-
-  int getNumSteps() {
-    //Empieza en 1 porque siempre tiene el comentario general
-    int totalSteps = 1;
-
-    totalSteps += criterios.length;
-
-    if (tieneProcedimientos) {
-      totalSteps++;
-    }
-
-    if (tienePatologias) {
-      totalSteps++;
-    }
-
-    return totalSteps;
-  }
 }

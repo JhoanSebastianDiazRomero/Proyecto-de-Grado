@@ -7,14 +7,22 @@ part of 'rubrica.dart';
 // **************************************************************************
 
 Rubrica _$RubricaFromJson(Map<String, dynamic> json) => Rubrica(
-      json['nombre'] as String,
-      json['descripcion'] as String,
-      (json['criterios'] as List<dynamic>)
+      nombre: json['nombre'] as String,
+      descripcion: json['descripcion'] as String,
+      criterios: (json['criterios'] as List<dynamic>)
           .map((e) => Criterio.fromJson(e as Map<String, dynamic>))
           .toList(),
-      json['tieneProcedimientos'] as bool,
-      json['tienePatologias'] as bool,
-      json['comentarioGeneral'] as String,
+      tieneProcedimientos: json['tieneProcedimientos'] as bool,
+      procedimientosSeleccionados:
+          (json['procedimientosSeleccionados'] as List<dynamic>)
+              .map((e) => e as String)
+              .toList(),
+      tienePatologias: json['tienePatologias'] as bool,
+      patologiasSeleccionadas:
+          (json['patologiasSeleccionadas'] as List<dynamic>)
+              .map((e) => e as String)
+              .toList(),
+      comentarioGeneral: json['comentarioGeneral'] as String,
     )..id = json['id'] as String;
 
 Map<String, dynamic> _$RubricaToJson(Rubrica instance) => <String, dynamic>{
@@ -23,6 +31,8 @@ Map<String, dynamic> _$RubricaToJson(Rubrica instance) => <String, dynamic>{
       'descripcion': instance.descripcion,
       'criterios': instance.criterios,
       'tieneProcedimientos': instance.tieneProcedimientos,
+      'procedimientosSeleccionados': instance.procedimientosSeleccionados,
       'tienePatologias': instance.tienePatologias,
+      'patologiasSeleccionadas': instance.patologiasSeleccionadas,
       'comentarioGeneral': instance.comentarioGeneral,
     };
