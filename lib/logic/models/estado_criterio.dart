@@ -8,7 +8,7 @@ class EstadoCriterio {
   int itemSeleccionado;
   String comentario;
 
-  EstadoCriterio({this.itemSeleccionado = -1, required this.comentario});
+  EstadoCriterio({this.itemSeleccionado = -1, this.comentario = ''});
 
   EstadoCriterio copyWith({int? itemSeleccionado, String? comentario}) {
     return EstadoCriterio(

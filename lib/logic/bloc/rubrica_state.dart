@@ -1,36 +1,51 @@
 part of 'rubrica_bloc.dart';
 
 class RubricaState {
-  Rubrica rubrica;
-  Estudiante estudiante;
-
-  int currentStep;
-  String dropdownValue;
-
   bool terminoCarga;
 
+  List<Estudiante> estudiantes;
+  Rubrica rubrica;
+  EstadoRubrica estadoRubrica;
+
+  int currentStep;
+  Estudiante estudianteSeleccionado;
+
+  List<PItem> procedimientosFiltrados;
+  List<PItem> patologiasFiltradas;
+
   RubricaState(
-      {required this.rubrica,
-      required this.estudiante,
+      {required this.estudiantes,
+      required this.rubrica,
+      required this.estadoRubrica,
       required this.currentStep,
-      required this.dropdownValue,
-      required this.terminoCarga});
+      required this.estudianteSeleccionado,
+      required this.terminoCarga,
+      required this.procedimientosFiltrados,
+      required this.patologiasFiltradas});
 
   RubricaState copyWith(
       {Rubrica? rubrica,
-      Estudiante? estudiante,
+      List<Estudiante>? estudiantes,
+      EstadoRubrica? estadoRubrica,
       int? currentStep,
+      Estudiante? estudianteSeleccionado,
       String? dropdownValue,
       int? criterioSeleccionado,
       List<String>? comentariosCriterios,
-      List<bool>? selectedList,
-      bool? terminoCarga}) {
+      bool? terminoCarga,
+      List<PItem>? procedimientosFiltrados,
+      List<PItem>? patologiasFiltradas}) {
     return RubricaState(
+        estudiantes: estudiantes ?? this.estudiantes,
         rubrica: rubrica ?? this.rubrica,
-        estudiante: estudiante ?? this.estudiante,
+        estadoRubrica: estadoRubrica ?? this.estadoRubrica,
         currentStep: currentStep ?? this.currentStep,
-        dropdownValue: dropdownValue ?? this.dropdownValue,
-        terminoCarga: terminoCarga ?? this.terminoCarga);
+        estudianteSeleccionado:
+            estudianteSeleccionado ?? this.estudianteSeleccionado,
+        terminoCarga: terminoCarga ?? this.terminoCarga,
+        procedimientosFiltrados:
+            procedimientosFiltrados ?? this.procedimientosFiltrados,
+        patologiasFiltradas: patologiasFiltradas ?? this.patologiasFiltradas);
   }
 }
 
@@ -38,16 +53,24 @@ class RubricaStateInitial extends RubricaState {
   RubricaStateInitial()
       : super(
             rubrica: Rubrica(
-                nombre: '',
-                descripcion: '',
-                criterios: List<Criterio>.empty(),
-                tieneProcedimientos: false,
-                procedimientosSeleccionados: List<String>.empty(),
-                tienePatologias: false,
-                patologiasSeleccionadas: List<String>.empty(),
+              id: '',
+              nombre: '',
+              descripcion: '',
+              criterios: [],
+              tieneProcedimientos: false,
+              tienePatologias: false,
+            ),
+            estudiantes: [],
+            estadoRubrica: EstadoRubrica(
+                codigoEstudiante: '',
+                idRubrica: '',
+                estadosCriterios: {},
+                patologiasSeleccionadas: [],
+                procedimientosSeleccionados: [],
                 comentarioGeneral: ''),
-            estudiante: Estudiante('', ''),
             currentStep: 0,
-            dropdownValue: 'Jhoan Sebastian Diaz Romero',
-            terminoCarga: false);
+            estudianteSeleccionado: Estudiante(nombre: '', codigo: ''),
+            terminoCarga: false,
+            procedimientosFiltrados: [],
+            patologiasFiltradas: []);
 }

@@ -15,4 +15,9 @@ class PItem {
 
   factory PItem.fromJson(Map<String, dynamic> json) => _$PItemFromJson(json);
   Map<String, dynamic> toJson() => _$PItemToJson(this);
+
+  @override
+  String toString() {
+    return codigo + ' - ' + nombre;
+  }
 }

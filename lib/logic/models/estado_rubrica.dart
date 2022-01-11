@@ -1,9 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:tesis/logic/models/estado_criterio.dart';
-import 'package:uuid/uuid.dart';
-import 'criterio.dart';
-import 'p_item.dart';
 
 //flutter pub run build_runner build
 part 'estado_rubrica.g.dart';

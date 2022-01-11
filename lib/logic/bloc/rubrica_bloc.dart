@@ -1,20 +1,22 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:tesis/logic/models/estado_criterio.dart';
+import 'package:tesis/logic/models/estado_rubrica.dart';
 import 'package:tesis/logic/models/models.dart';
+import 'package:collection/collection.dart';
 
 part 'rubrica_event.dart';
 part 'rubrica_state.dart';
 
 class RubricaBloc extends Bloc<RubricaEvent, RubricaState> {
   RubricaBloc() : super(RubricaStateInitial()) {
-    on<LoadScreen>(
-        (event, emit) => emit(state.copyWith(rubrica: event.rubrica)));
+    on<LoadScreen>((event, emit) => emit(_loadScreen(event)));
 
     on<StepChanged>(
         (event, emit) => emit(state.copyWith(currentStep: event.currentStep)));
 
-    on<DropdownChanged>((event, emit) =>
-        emit(state.copyWith(dropdownValue: event.dropdownValue)));
+    on<EstudianteSeleccionadoChanged>((event, emit) => emit(
+        state.copyWith(estudianteSeleccionado: event.estudianteSeleccionado)));
 
     on<ItemSeleccionadoChanged>(
         (event, emit) => {emit(_itemSeleccionadoProcess(event))});
@@ -37,71 +39,108 @@ class RubricaBloc extends Bloc<RubricaEvent, RubricaState> {
     on<PatologiaUnchecked>(
         (event, emit) => emit(_patologiaUncheckedProcess(event)));
 
+    on<FiltrarPatologias>((event, emit) =>
+        emit(state.copyWith(patologiasFiltradas: event.patologiasFiltradas)));
+
+    on<FiltrarProcedimientos>((event, emit) => emit(state.copyWith(
+        procedimientosFiltrados: event.procedimientosFiltrados)));
+
     on<ComentarioGeneralChanged>(
         (event, emit) => emit(_comentarioGeneralChangedProcess(event)));
   }
 
+  RubricaState _loadScreen(LoadScreen event) {
+    Estudiante primerEstudiante = event.estudiantes.elementAt(0);
+    Rubrica rubrica = event.rubrica;
+    Map<String, EstadoCriterio> estadoCriterios = {};
+
+    for (var criterio in rubrica.criterios) {
+      estadoCriterios[criterio.id] = EstadoCriterio();
+    }
+
+    //Carga steps
+    List<Step> steps = [];
+
+    return state.copyWith(
+        estudiantes: event.estudiantes,
+        rubrica: rubrica,
+        estudianteSeleccionado: primerEstudiante,
+        estadoRubrica: primerEstudiante.estadosRubricas.firstWhereOrNull(
+                (estadoRubrica) => estadoRubrica.idRubrica == rubrica.id) ??
+            EstadoRubrica(
+                idRubrica: rubrica.id,
+                codigoEstudiante: primerEstudiante.codigo,
+                estadosCriterios: estadoCriterios),
+        procedimientosFiltrados: event.procedimientos,
+        patologiasFiltradas: event.patologias);
+  }
+
   RubricaState _itemSeleccionadoProcess(ItemSeleccionadoChanged event) {
-    List<Criterio> criterios = state.rubrica.criterios;
-    criterios[event.numCriterio] = criterios
-        .elementAt(event.numCriterio)
+    Map<String, EstadoCriterio> estadosCriterios =
+        state.estadoRubrica.estadosCriterios;
+
+    estadosCriterios[event.idCriterio] = estadosCriterios[event.idCriterio]!
         .copyWith(itemSeleccionado: event.itemSeleccionado);
 
     return state.copyWith(
-        rubrica: state.rubrica.copyWith(criterios: criterios));
+        estadoRubrica:
+            state.estadoRubrica.copyWith(estadosCriterios: estadosCriterios));
   }
 
   RubricaState _comentarioChangedProcess(ComentarioCriterioChanged event) {
-    List<Criterio> criterios = state.rubrica.criterios;
-    criterios[event.numCriterio] = criterios
-        .elementAt(event.numCriterio)
+    Map<String, EstadoCriterio> estadosCriterios =
+        state.estadoRubrica.estadosCriterios;
+
+    estadosCriterios[event.idCriterio] = estadosCriterios[event.idCriterio]!
         .copyWith(comentario: event.comentario);
 
     return state.copyWith(
-        rubrica: state.rubrica.copyWith(criterios: criterios));
+        estadoRubrica:
+            state.estadoRubrica.copyWith(estadosCriterios: estadosCriterios));
   }
 
   RubricaState _procedimientoCheckedProcess(ProcedimientoChecked event) {
     List<String> procedimientos = [
-      ...state.rubrica.procedimientosSeleccionados
+      ...state.estadoRubrica.procedimientosSeleccionados
     ];
     procedimientos.add(event.codigo);
-    print(procedimientos);
     return state.copyWith(
-        rubrica: state.rubrica
+        estadoRubrica: state.estadoRubrica
             .copyWith(procedimientosSeleccionados: procedimientos));
   }
 
   RubricaState _procedimientoUncheckedProcess(ProcedimientoUnchecked event) {
     List<String> procedimientos = [
-      ...state.rubrica.procedimientosSeleccionados
+      ...state.estadoRubrica.procedimientosSeleccionados
     ];
     procedimientos.remove(event.codigo);
 
     return state.copyWith(
-        rubrica: state.rubrica
+        estadoRubrica: state.estadoRubrica
             .copyWith(procedimientosSeleccionados: procedimientos));
   }
 
   RubricaState _patologiaCheckedProcess(PatologiaChecked event) {
-    List<String> patologias = [...state.rubrica.patologiasSeleccionadas];
+    List<String> patologias = [...state.estadoRubrica.patologiasSeleccionadas];
     patologias.add(event.codigo);
-    print(patologias);
     return state.copyWith(
-        rubrica: state.rubrica.copyWith(patologiasSeleccionadas: patologias));
+        estadoRubrica:
+            state.estadoRubrica.copyWith(patologiasSeleccionadas: patologias));
   }
 
   RubricaState _patologiaUncheckedProcess(PatologiaUnchecked event) {
-    List<String> patologias = [...state.rubrica.patologiasSeleccionadas];
+    List<String> patologias = [...state.estadoRubrica.patologiasSeleccionadas];
     patologias.remove(event.codigo);
 
     return state.copyWith(
-        rubrica: state.rubrica.copyWith(patologiasSeleccionadas: patologias));
+        estadoRubrica:
+            state.estadoRubrica.copyWith(patologiasSeleccionadas: patologias));
   }
 
   RubricaState _comentarioGeneralChangedProcess(
       ComentarioGeneralChanged event) {
     return state.copyWith(
-        rubrica: state.rubrica.copyWith(comentarioGeneral: event.comentario));
+        estadoRubrica:
+            state.estadoRubrica.copyWith(comentarioGeneral: event.comentario));
   }
 }
