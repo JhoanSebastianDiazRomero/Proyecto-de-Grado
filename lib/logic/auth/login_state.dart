@@ -1,25 +1,21 @@
-import 'package:tesis/logic/form_submission_status.dart';
-
 class LoginState {
   final String username;
   final String password;
-  final FormSubmissionStatus formStatus;
+  final bool isValidLogin;
 
   LoginState({
     this.username = '',
     this.password = '',
-    this.formStatus = const InitialFormStatus(),
+    this.isValidLogin = false,
   });
 
   LoginState copyWith({
     String? username,
     String? password,
-    FormSubmissionStatus? formStatus,
   }) {
     return LoginState(
       username: username ?? this.username,
       password: password ?? this.password,
-      formStatus: formStatus ?? this.formStatus,
     );
   }
 }

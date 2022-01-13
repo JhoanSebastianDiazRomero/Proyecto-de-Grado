@@ -17,11 +17,11 @@ EstadoRubrica _$EstadoRubricaFromJson(Map<String, dynamic> json) =>
       ),
       procedimientosSeleccionados:
           (json['procedimientosSeleccionados'] as List<dynamic>?)
-              ?.map((e) => e as String)
+              ?.map((e) => PItem.fromJson(e as Map<String, dynamic>))
               .toList(),
       patologiasSeleccionadas:
           (json['patologiasSeleccionadas'] as List<dynamic>?)
-              ?.map((e) => e as String)
+              ?.map((e) => PItem.fromJson(e as Map<String, dynamic>))
               .toList(),
       comentarioGeneral: json['comentarioGeneral'] as String?,
     );

@@ -7,7 +7,6 @@ part of 'rubrica.dart';
 // **************************************************************************
 
 Rubrica _$RubricaFromJson(Map<String, dynamic> json) => Rubrica(
-      id: json['id'] as String,
       nombre: json['nombre'] as String,
       descripcion: json['descripcion'] as String,
       criterios: (json['criterios'] as List<dynamic>)
@@ -15,7 +14,7 @@ Rubrica _$RubricaFromJson(Map<String, dynamic> json) => Rubrica(
           .toList(),
       tieneProcedimientos: json['tieneProcedimientos'] as bool,
       tienePatologias: json['tienePatologias'] as bool,
-    );
+    )..id = json['id'] as String;
 
 Map<String, dynamic> _$RubricaToJson(Rubrica instance) => <String, dynamic>{
       'id': instance.id,

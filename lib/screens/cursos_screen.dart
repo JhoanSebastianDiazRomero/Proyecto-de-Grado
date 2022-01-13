@@ -1,21 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:tesis/logic/models/course.dart';
+import 'package:tesis/logic/models/curso.dart';
 import 'package:tesis/screens/rubrica_screen.dart';
-import '../logic/models/course.dart';
+import '../logic/models/models.dart';
 
 class CursosScreen extends StatelessWidget {
-  const CursosScreen({Key? key}) : super(key: key);
+  final List<Curso> cursos;
+  const CursosScreen({Key? key, required this.cursos}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var courses = List<Course>.from([
-      Course('CONSTR. APLIC.MÓVILES (INGLÉS)', '202110_ISIS3510_02'),
-      Course('BIOL. ORGANISMOS-TEO', '202110_BIOL1300_02'),
-      Course(
-          'COMPUTACION FORENSE: DELITOS INFORMATICOS, ASPECTOS LEGALES Y EVIDENCIA DIGITAL',
-          '202110_MSIN4206_01'),
-      Course('DERECHOS DE AUTOR (3 CREDITOS)', '202110_DERE3210_01'),
-    ]);
     return Scaffold(
         appBar: AppBar(
           title: Text("Cursos"),
@@ -27,10 +20,9 @@ class CursosScreen extends StatelessWidget {
             ),
             Expanded(
                 child: ListView.builder(
-              itemCount: courses.length,
+              itemCount: cursos.length,
               itemBuilder: (context, index) {
-                return _item(context, courses.elementAt(index).nombre,
-                    courses.elementAt(index).codigo);
+                return _item(context, cursos.elementAt(index));
               },
             )),
             SizedBox(
@@ -40,16 +32,17 @@ class CursosScreen extends StatelessWidget {
         ));
   }
 
-  Widget _item(context, nombre_curso, codigo) {
+  Widget _item(context, Curso curso) {
     return Card(
       child: ListTile(
-        title: Text(nombre_curso),
-        subtitle: Text(codigo),
+        title: Text(curso.nombre),
+        subtitle: Text(curso.codigo),
         onTap: () {
+          final page = ListaRubricasScreen(
+            curso: curso,
+          );
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => CalificarRubricaScreen()));
+              context, MaterialPageRoute(builder: (context) => page));
         },
       ),
       margin: EdgeInsets.only(left: 50.0, right: 50.0, top: 10.0),

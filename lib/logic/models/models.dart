@@ -1,4 +1,4 @@
-export 'course.dart';
+export 'curso.dart';
 export 'rubrica.dart';
 export 'estudiante.dart';
 export 'criterio.dart';

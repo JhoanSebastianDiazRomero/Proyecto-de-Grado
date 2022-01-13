@@ -32,23 +32,23 @@ class ComentarioCriterioChanged extends RubricaEvent {
 }
 
 class ProcedimientoChecked extends RubricaEvent {
-  final String codigo;
-  ProcedimientoChecked({required this.codigo});
+  final PItem item;
+  ProcedimientoChecked({required this.item});
 }
 
 class ProcedimientoUnchecked extends RubricaEvent {
-  final String codigo;
-  ProcedimientoUnchecked({required this.codigo});
+  final PItem item;
+  ProcedimientoUnchecked({required this.item});
 }
 
 class PatologiaChecked extends RubricaEvent {
-  final String codigo;
-  PatologiaChecked({required this.codigo});
+  final PItem item;
+  PatologiaChecked({required this.item});
 }
 
 class PatologiaUnchecked extends RubricaEvent {
-  final String codigo;
-  PatologiaUnchecked({required this.codigo});
+  final PItem item;
+  PatologiaUnchecked({required this.item});
 }
 
 class FiltrarPatologias extends RubricaEvent {
@@ -67,15 +67,9 @@ class ComentarioGeneralChanged extends RubricaEvent {
 }
 
 class LoadScreen extends RubricaEvent {
-  final List<Estudiante> estudiantes;
-  final Rubrica rubrica;
-  final List<PItem> procedimientos;
-  final List<PItem> patologias;
-  LoadScreen(
-      {required this.estudiantes,
-      required this.rubrica,
-      required this.procedimientos,
-      required this.patologias});
+  final Curso curso;
+  final String rubricaEscogida;
+  LoadScreen({required this.curso, required this.rubricaEscogida});
 }
 
 class ScreenLoaded extends RubricaEvent {

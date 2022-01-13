@@ -7,22 +7,25 @@ part 'criterio.g.dart';
 
 @JsonSerializable()
 class Criterio {
-  String id /* = Uuid().v4() */;
+  String id = Uuid().v4();
   String descripcion;
   List<CriterioItem> items;
 
-  Criterio({required this.id, required this.descripcion, required this.items});
+  Criterio(this.descripcion, this.items);
 
   Criterio copyWith(
-      {String? id,
-      String? descripcion,
-      List<CriterioItem>? items,
-      String? comentario,
-      int? itemSeleccionado}) {
-    return Criterio(
-        id: id ?? this.id,
-        descripcion: descripcion ?? this.descripcion,
-        items: items ?? this.items);
+      {String? descripcion, List<CriterioItem>? items, String? comentario}) {
+    return Criterio(descripcion ?? this.descripcion, items ?? this.items);
+  }
+
+  @override
+  String toString() {
+    return "Criterio: id: " +
+        id +
+        " descripcion: " +
+        descripcion +
+        " items: " +
+        items.toString();
   }
 
   factory Criterio.fromJson(Map<String, dynamic> json) =>

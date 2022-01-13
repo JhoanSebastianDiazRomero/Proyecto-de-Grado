@@ -16,7 +16,8 @@ class Estudiante {
       String? urlImagen,
       List<EstadoRubrica>? estadosRubricas})
       : estadosRubricas = estadosRubricas ?? [],
-        urlImagen = 'http://cdn.onlinewebfonts.com/svg/img_237553.png';
+        urlImagen =
+            urlImagen ?? 'http://cdn.onlinewebfonts.com/svg/img_237553.png';
 
   Estudiante copyWith(
       {String? nombre, String? codigo, List<EstadoRubrica>? estadosRubricas}) {
@@ -24,6 +25,18 @@ class Estudiante {
         nombre: nombre ?? this.nombre,
         codigo: codigo ?? this.codigo,
         estadosRubricas: estadosRubricas ?? this.estadosRubricas);
+  }
+
+  @override
+  String toString() {
+    return "Estudiante: nombre: " +
+        nombre +
+        " codigo: " +
+        codigo +
+        " urlImagen: " +
+        urlImagen +
+        " estadosRubricas: " +
+        estadosRubricas.toString();
   }
 
   factory Estudiante.fromJson(Map<String, dynamic> json) =>

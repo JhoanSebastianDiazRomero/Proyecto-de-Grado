@@ -7,12 +7,11 @@ part of 'criterio.dart';
 // **************************************************************************
 
 Criterio _$CriterioFromJson(Map<String, dynamic> json) => Criterio(
-      id: json['id'] as String,
-      descripcion: json['descripcion'] as String,
-      items: (json['items'] as List<dynamic>)
+      json['descripcion'] as String,
+      (json['items'] as List<dynamic>)
           .map((e) => CriterioItem.fromJson(e as Map<String, dynamic>))
           .toList(),
-    );
+    )..id = json['id'] as String;
 
 Map<String, dynamic> _$CriterioToJson(Criterio instance) => <String, dynamic>{
       'id': instance.id,

@@ -34,7 +34,6 @@ dependencies:
   flutter_bloc: ^7.3.3
   google_fonts: ^2.1.0
   http: ^0.13.4
-  hydrated_bloc: ^7.1.0
   json_annotation: ^4.4.0
   json_serializable: ^6.1.2
   uuid: ^3.0.5

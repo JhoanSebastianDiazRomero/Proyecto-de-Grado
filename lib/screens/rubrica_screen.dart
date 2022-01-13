@@ -2,137 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:tesis/logic/models/models.dart';
 import 'package:tesis/screens/rubrica_detail_screen.dart';
 
-class CalificarRubricaScreen extends StatelessWidget {
-  const CalificarRubricaScreen({Key? key}) : super(key: key);
+class ListaRubricasScreen extends StatelessWidget {
+  final Curso curso;
+  const ListaRubricasScreen({Key? key, required this.curso}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var items = List<CriterioItem>.from([
-      CriterioItem('No lo observó', ''),
-      CriterioItem('No lo hace', ''),
-      CriterioItem('No está preparado',
-          'Información es  insuficiente, omite datos relevantes o se desvía del problema.  El examen es incompleto u omite  detalles relevantes.'),
-      CriterioItem('Aceptable',
-          'La  información es completa y estructurada. Conoce e interpreta las pruebas diagnosticas esenciales.  Tiene en cuenta riesgos, beneficios y las preferencias del paciente.'),
-      CriterioItem('Lo hace bien', ''),
-      CriterioItem('Ejemplar',
-          'La  información es completa, cronológica y estructurada, describe el estado del paciente y los hallazgos principales, hace un plan de estudio razonado, coherente. Conoce, prioriza e interpreta las pruebas diagnosticas,  las usa para el diagnostico, gravedad y seguimiento. Tiene en cuenta riesgos, beneficios y las preferencias del paciente.'),
-      CriterioItem('No Aplica', '')
-    ]);
-
-    var criterios = List<Criterio>.from([
-      Criterio(
-          id: '1',
-          descripcion:
-              'Hace una historia clínica completa y detallada del paciente pediátrico. Identifica y prioriza los diagnósticos diferenciales, conoce y usa adecuadamente las pruebas diagnosticas indicadas.',
-          items: items),
-      Criterio(
-          id: '2',
-          descripcion:
-              'Toma valores antropométricos, analiza percentil; valora el estado nutricional, la alimentación, salud bucal los hábitos y practica, hace evaluación ocular,  auditiva, identificación sexual, . ',
-          items: items),
-      Criterio(
-          id: '3',
-          descripcion:
-              'Toma valores antropométricos, analiza percentil; valora el estado nutricional, la alimentación, salud bucal los hábitos y practica, hace evaluación ocular,  auditiva, identificación sexual, . ',
-          items: items),
-      Criterio(
-          id: '4',
-          descripcion:
-              'Evalúa la conformación y dinámica familiar, situaciones de vulnerabilidad. Busca e identifica señales de stress, ansiedad, depresión, riesgo de violencia, maltrato, uso de tabaco, sustancias sicoactivas.  Maneja situaciones de riesgo, educa, remite para apoyar.',
-          items: items),
-      Criterio(
-          id: '5',
-          descripcion:
-              'Evalúa la conformación y dinámica familiar, situaciones de vulnerabilidad. Busca e identifica señales de stress, ansiedad, depresión, riesgo de violencia, maltrato, uso de tabaco, sustancias sicoactivas.  Maneja situaciones de riesgo, educa, remite para apoyar.',
-          items: items),
-      Criterio(
-          id: '6',
-          descripcion:
-              'El residente demuestra capacidad para diagnosticar y manejar  adecuadamente las enfermedades y situaciones clínicas frecuentes de la rotación.  Reconoce sus limitaciones y solicita ayuda.',
-          items: items),
-      Criterio(
-          id: '7',
-          descripcion:
-              'Se comunica adecuadamente con el paciente y familia, educa y orienta sobre el cuidado, crianza, recreación, actividad física, alimentación, salud oral, sexualidad, vacunación, etc.',
-          items: items),
-      Criterio(
-          id: '8',
-          descripcion:
-              'Se comunica adecuadamente con el paciente y familia, educa y orienta sobre el cuidado, crianza, recreación, actividad física, alimentación, salud oral, sexualidad, vacunación, etc.',
-          items: items),
-      Criterio(
-          id: '9',
-          descripcion:
-              'El residente  es  compasivo, se preocupa por  la privacidad  y autonomía del  paciente  y su familia ',
-          items: items)
-    ]);
-
-    var rubricas = List<Rubrica>.from([
-      Rubrica(
-          id: '1',
-          nombre: 'Consulta Observada',
-          descripcion:
-              'Desempeno del residente en rotacion de consulta externa',
-          criterios: criterios,
-          tieneProcedimientos: true,
-          tienePatologias: true),
-      Rubrica(
-          id: '2',
-          nombre: 'Concepto Enfermeria',
-          descripcion:
-              'A continuacion encontrara la rubrica de evaluacion para solicitar el concepto a \"ENFERMERAS Y PERSONAL NO MEDICO\" sobre el comportamiento del residente en su sitio de trabajo. Por favor lea el item, luego senale el grado de desarrollo en que se encuentra el residente',
-          criterios: criterios,
-          tieneProcedimientos: true,
-          tienePatologias: true),
-      Rubrica(
-          id: '3',
-          nombre: 'Concepto Enfermeria 2',
-          descripcion:
-              'A continuacion encontrara la rubrica de evaluacion para solicitar el concepto a \"ENFERMERAS Y PERSONAL NO MEDICO\" sobre el comportamiento del residente en su sitio de trabajo. Por favor lea el item, luego senale el grado de desarrollo en que se encuentra el residente',
-          criterios: criterios,
-          tieneProcedimientos: true,
-          tienePatologias: true),
-      Rubrica(
-          id: '4',
-          nombre: 'Desempeño general de la rotación EV1',
-          descripcion:
-              "Le pedimos el ffavor lea el item y lo compare con la definicion de logro maximo a alcanzar (5), luego senale el grado de desarrollo en el que usted considera se encuentra el residente",
-          criterios: criterios,
-          tieneProcedimientos: true,
-          tienePatologias: true),
-      Rubrica(
-          id: '5',
-          nombre: 'Revista Observada EV1',
-          descripcion:
-              'Rubrica de valoracion del desempeno en la atencion del paciente (REVISTA MEDICA)',
-          criterios: criterios,
-          tieneProcedimientos: true,
-          tienePatologias: true),
-      Rubrica(
-          id: '6',
-          nombre: 'Revista Observada EV2',
-          descripcion:
-              'Rubrica de valoracion del desempeno en la atencion del paciente (REVISTA MEDICA)',
-          criterios: criterios,
-          tieneProcedimientos: true,
-          tienePatologias: true),
-      Rubrica(
-          id: '7',
-          nombre: "Mini CEX",
-          descripcion: "MiniCEX completo",
-          criterios: criterios,
-          tieneProcedimientos: true,
-          tienePatologias: true)
-    ]);
-
-    var estudiantes = List<Estudiante>.from([
-      Estudiante(nombre: 'Jhoan Sebastian Diaz Romero', codigo: '1'),
-      Estudiante(nombre: 'Juan Pablo Sanmiguel Mateus', codigo: '2'),
-      Estudiante(nombre: 'Juan Ardila Silva', codigo: '3'),
-      Estudiante(nombre: 'Ana María Mejía Mosquera', codigo: '4')
-    ]);
-
     return Scaffold(
         appBar: AppBar(
           title: Text("Rubricas"),
@@ -144,10 +19,10 @@ class CalificarRubricaScreen extends StatelessWidget {
             ),
             Expanded(
                 child: ListView.builder(
-                    itemCount: rubricas.length,
+                    itemCount: curso.rubricas.length,
                     itemBuilder: (context, index) {
-                      return _item(
-                          context, rubricas.elementAt(index), estudiantes);
+                      return _item(context, curso.rubricas.elementAt(index),
+                          curso.estudiantes);
                     })),
             SizedBox(
               height: 20,
@@ -172,9 +47,7 @@ class CalificarRubricaScreen extends StatelessWidget {
                 ElevatedButton(
                     onPressed: () {
                       final page = RubricaScreen(
-                        rubrica: rubrica,
-                        estudiantes: estudiantes,
-                      );
+                          curso: curso, rubricaEscogida: rubrica.id);
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => page));
                     },

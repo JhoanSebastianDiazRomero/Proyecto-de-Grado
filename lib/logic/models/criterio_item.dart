@@ -9,6 +9,11 @@ class CriterioItem {
 
   CriterioItem(this.titulo, this.descripcion);
 
+  @override
+  String toString() {
+    return "CriterioItem: titulo: " + titulo + " descripcion " + descripcion;
+  }
+
   factory CriterioItem.fromJson(Map<String, dynamic> json) =>
       _$CriterioItemFromJson(json);
   Map<String, dynamic> toJson() => _$CriterioItemToJson(this);

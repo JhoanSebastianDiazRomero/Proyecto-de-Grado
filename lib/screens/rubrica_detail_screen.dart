@@ -1,67 +1,26 @@
-// ignore_for_file: prefer_const_constructors, non_constant_identifier_names, prefer_const_literals_to_create_immutables
+import 'dart:convert';
+import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'package:tesis/logic/bloc/rubrica_bloc.dart';
 import 'package:tesis/logic/models/models.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RubricaScreen extends StatelessWidget {
-  final Rubrica rubrica;
-  final List<Estudiante> estudiantes;
+  final Curso curso;
+  final String rubricaEscogida;
 
-  RubricaScreen({Key? key, required this.rubrica, required this.estudiantes})
+  RubricaScreen({Key? key, required this.curso, required this.rubricaEscogida})
       : super(key: key);
-
-  var procedimientos = List<PItem>.from([
-    PItem(codigo: '1', nombre: 'revision'),
-    PItem(codigo: '2', nombre: 'diagnostico'),
-    PItem(codigo: '3', nombre: 'limpieza'),
-    PItem(codigo: '4', nombre: 'cirugia'),
-    PItem(codigo: '5', nombre: 'operacion'),
-    PItem(codigo: '6', nombre: 'revision2'),
-    PItem(codigo: '7', nombre: 'diagnostico2'),
-    PItem(codigo: '8', nombre: 'limpieza2'),
-    PItem(codigo: '9', nombre: 'cirugia2'),
-    PItem(codigo: '10', nombre: 'operacion2'),
-  ]);
-
-  var patologias = List<PItem>.from([
-    PItem(codigo: '1', nombre: 'otitis'),
-    PItem(codigo: '2', nombre: 'dermatitis'),
-    PItem(codigo: '3', nombre: 'fractura'),
-    PItem(codigo: '4', nombre: 'covid'),
-    PItem(codigo: '5', nombre: 'hepatitis'),
-    PItem(codigo: '6', nombre: 'alergia'),
-    PItem(codigo: '7', nombre: 'otitis2'),
-    PItem(codigo: '8', nombre: 'dermatitis2'),
-    PItem(codigo: '9', nombre: 'fractura2'),
-    PItem(codigo: '10', nombre: 'covid2'),
-  ]);
-
-  var items = List<CriterioItem>.from([
-    CriterioItem('No lo observó', ''),
-    CriterioItem('No lo hace', ''),
-    CriterioItem('No está preparado',
-        'Información es  insuficiente, omite datos relevantes o se desvía del problema.  El examen es incompleto u omite  detalles relevantes.'),
-    CriterioItem('Aceptable',
-        'La  información es completa y estructurada. Conoce e interpreta las pruebas diagnosticas esenciales.  Tiene en cuenta riesgos, beneficios y las preferencias del paciente.'),
-    CriterioItem('Lo hace bien', ''),
-    CriterioItem('Ejemplar',
-        'La  información es completa, cronológica y estructurada, describe el estado del paciente y los hallazgos principales, hace un plan de estudio razonado, coherente. Conoce, prioriza e interpreta las pruebas diagnosticas,  las usa para el diagnostico, gravedad y seguimiento. Tiene en cuenta riesgos, beneficios y las preferencias del paciente.'),
-    CriterioItem('No Aplica', '')
-  ]);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<RubricaBloc>(
       create: (context) => RubricaBloc()
-        ..add(LoadScreen(
-            estudiantes: estudiantes,
-            rubrica: rubrica,
-            procedimientos: procedimientos,
-            patologias: patologias)),
+        ..add(LoadScreen(curso: curso, rubricaEscogida: rubricaEscogida)),
       child: BlocBuilder<RubricaBloc, RubricaState>(
         builder: (context, state) {
-          if ((state.rubrica.criterios.isNotEmpty)) {
+          if ((state.terminoCarga)) {
             return SafeArea(
               child: Scaffold(
                   appBar: AppBar(
@@ -70,40 +29,32 @@ class RubricaScreen extends StatelessWidget {
                   body: ListView(
                     children: [
                       SizedBox(height: 20),
-                      BlocBuilder<RubricaBloc, RubricaState>(
-                        builder: (context, state) {
-                          return _EstudianteBox(estudiantes, context, state);
-                        },
-                      ),
+                      _EstudianteBox(curso.estudiantes, context, state),
                       SizedBox(height: 10),
-                      BlocBuilder<RubricaBloc, RubricaState>(
-                        builder: (context, state) {
-                          return Stepper(
-                            controlsBuilder: (BuildContext context,
-                                ControlsDetails controls) {
-                              return Row(
-                                children: <Widget>[],
-                              );
-                            },
-                            type: StepperType.vertical,
-                            physics: ClampingScrollPhysics(),
-                            currentStep: state.currentStep,
-                            onStepTapped: (step) => {
-                              context
-                                  .read<RubricaBloc>()
-                                  .add(StepChanged(currentStep: step))
-                            },
-                            onStepContinue: () {},
-                            onStepCancel: () {},
-                            steps: getSteps(context, state),
+                      Stepper(
+                        controlsBuilder:
+                            (BuildContext context, ControlsDetails controls) {
+                          return Row(
+                            children: <Widget>[],
                           );
                         },
-                      ),
+                        type: StepperType.vertical,
+                        physics: ClampingScrollPhysics(),
+                        currentStep: state.currentStep,
+                        onStepTapped: (step) => {
+                          context
+                              .read<RubricaBloc>()
+                              .add(StepChanged(currentStep: step))
+                        },
+                        onStepContinue: () {},
+                        onStepCancel: () {},
+                        steps: getSteps(context, state),
+                      )
                     ],
                   )),
             );
           } else {
-            return CircularProgressIndicator(value: null);
+            return Center(child: CircularProgressIndicator(value: null));
           }
         },
       ),
@@ -112,7 +63,9 @@ class RubricaScreen extends StatelessWidget {
 
   List<Step> getSteps(BuildContext context, RubricaState state) {
     List<Step> steps = [];
-    List<Criterio> criterios = state.rubrica.criterios;
+    Rubrica rubrica = state.curso.rubricas
+        .firstWhere((rubrica) => rubrica.id == rubricaEscogida);
+    List<Criterio> criterios = rubrica.criterios;
 
     int stepNumber = 0;
     for (int i = 0; i < criterios.length; i++) {
@@ -128,23 +81,23 @@ class RubricaScreen extends StatelessWidget {
       stepNumber++;
     }
 
-    if (state.rubrica.tieneProcedimientos) {
+    if (rubrica.tieneProcedimientos) {
       steps = [
         ...steps,
         Step(
             title: Text('Procedimientos'),
-            content: _procedimientos(),
+            content: _procedimientos(context, state),
             isActive: state.currentStep >= stepNumber)
       ];
       stepNumber++;
     }
 
-    if (state.rubrica.tieneProcedimientos) {
+    if (rubrica.tieneProcedimientos) {
       steps = [
         ...steps,
         Step(
             title: Text('Patologias'),
-            content: _patologias(),
+            content: _patologias(context, state),
             isActive: state.currentStep >= stepNumber)
       ];
       stepNumber++;
@@ -154,7 +107,7 @@ class RubricaScreen extends StatelessWidget {
       ...steps,
       Step(
           title: Text('Comentario general'),
-          content: _comentarioGeneral(context),
+          content: _comentarioGeneral(context, state),
           isActive: state.currentStep >= stepNumber)
     ];
 
@@ -183,6 +136,7 @@ class RubricaScreen extends StatelessWidget {
                 color: Color(0xFF1C958E),
               ),
               onChanged: (Estudiante? newValue) {
+                print(state.estudianteSeleccionado.urlImagen);
                 context.read<RubricaBloc>().add(EstudianteSeleccionadoChanged(
                     estudianteSeleccionado: newValue!));
               },
@@ -228,8 +182,8 @@ class RubricaScreen extends StatelessWidget {
             itemCount: items.length,
             itemBuilder: (context, index) {
               CriterioItem actual = items.elementAt(index);
-              return _criterioItem(
-                  idCriterio, index, actual.titulo, actual.descripcion);
+              return _criterioItem(idCriterio, index, actual.titulo,
+                  actual.descripcion, context, state);
             },
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
@@ -243,184 +197,167 @@ class RubricaScreen extends StatelessWidget {
           ),
           Text("Comentario: "),
           Container(
-            constraints: BoxConstraints(maxHeight: 100),
-            child: BlocBuilder<RubricaBloc, RubricaState>(
-              builder: (context, state) {
-                return TextFormField(
-                  initialValue: state
-                      .estadoRubrica.estadosCriterios[idCriterio]!.comentario,
-                  onChanged: (text) {
-                    context.read<RubricaBloc>().add(ComentarioCriterioChanged(
-                        idCriterio: idCriterio, comentario: text));
-                  },
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  scrollController: ScrollController(),
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
+              constraints: BoxConstraints(maxHeight: 100),
+              child: TextFormField(
+                controller: TextEditingController.fromValue(
+                  TextEditingValue(
+                    text: state
+                        .estadoRubrica.estadosCriterios[idCriterio]!.comentario,
+                    selection: TextSelection.collapsed(
+                      offset: state.estadoRubrica.estadosCriterios[idCriterio]!
+                          .comentario.length,
+                    ),
                   ),
-                );
-              },
-            ),
-          )
+                ),
+                onChanged: (text) {
+                  context.read<RubricaBloc>().add(ComentarioCriterioChanged(
+                      idCriterio: idCriterio, comentario: text));
+                },
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                scrollController: ScrollController(),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                ),
+              ))
         ],
       ),
     );
   }
 
-  Widget _criterioItem(
-      String idCriterio, int value, String titulo, String descripcion) {
+  Widget _criterioItem(String idCriterio, int value, String titulo,
+      String descripcion, BuildContext context, RubricaState state) {
     if (descripcion.isEmpty) {
-      return BlocBuilder<RubricaBloc, RubricaState>(
-        builder: (context, state) {
-          return RadioListTile(
-              title: Text(titulo),
-              dense: true,
-              value: value,
-              groupValue: state
-                  .estadoRubrica.estadosCriterios[idCriterio]!.itemSeleccionado,
-              onChanged: (pValue) {
-                context.read<RubricaBloc>().add(ItemSeleccionadoChanged(
-                    itemSeleccionado: pValue as int, idCriterio: idCriterio));
-              });
-        },
-      );
+      return RadioListTile(
+          title: Text(titulo),
+          dense: true,
+          value: value,
+          groupValue: state
+              .estadoRubrica.estadosCriterios[idCriterio]!.itemSeleccionado,
+          onChanged: (pValue) {
+            context.read<RubricaBloc>().add(ItemSeleccionadoChanged(
+                itemSeleccionado: pValue as int, idCriterio: idCriterio));
+          });
     } else {
-      return BlocBuilder<RubricaBloc, RubricaState>(
-        builder: (context, state) {
-          return RadioListTile(
-              title: Text(titulo),
-              subtitle: Text(descripcion),
-              dense: true,
-              value: value,
-              groupValue: state
-                  .estadoRubrica.estadosCriterios[idCriterio]!.itemSeleccionado,
-              onChanged: (pValue) {
-                context.read<RubricaBloc>().add(ItemSeleccionadoChanged(
-                    itemSeleccionado: pValue as int, idCriterio: idCriterio));
-              });
-        },
-      );
+      return RadioListTile(
+          title: Text(titulo),
+          subtitle: Text(descripcion),
+          dense: true,
+          value: value,
+          groupValue: state
+              .estadoRubrica.estadosCriterios[idCriterio]!.itemSeleccionado,
+          onChanged: (pValue) {
+            context.read<RubricaBloc>().add(ItemSeleccionadoChanged(
+                itemSeleccionado: pValue as int, idCriterio: idCriterio));
+          });
     }
   }
 
-  Widget _procedimientos() {
-    return BlocBuilder<RubricaBloc, RubricaState>(
-      builder: (context, state) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(height: 10),
-            TextField(
-              decoration: InputDecoration(
-                icon: Icon(Icons.search),
-                border: OutlineInputBorder(),
-                hintText: 'Buscar procedimientos',
-              ),
-              onChanged: (query) {
-                filtrarProcedimientos(query, context, state);
-              },
-            ),
-            SizedBox(height: 10),
-            Container(
-              height: 200,
-              constraints: BoxConstraints(maxHeight: 500),
-              child: ListView.builder(
-                physics: ClampingScrollPhysics(),
-                itemCount: state.procedimientosFiltrados.length,
-                itemBuilder: (context, index) {
-                  PItem actual = state.procedimientosFiltrados.elementAt(index);
-                  return CheckboxListTile(
-                      title: Text(actual.toString()),
-                      value: state.estadoRubrica.procedimientosSeleccionados
-                          .contains(actual.codigo),
-                      onChanged: (bool? value) {
-                        if (value != null && value) {
-                          if (!state.estadoRubrica.procedimientosSeleccionados
-                              .contains(actual.codigo)) {
-                            print("Checked");
-                            context.read<RubricaBloc>().add(
-                                ProcedimientoChecked(codigo: actual.codigo));
-                          }
-                        } else if (value != null && !value) {
-                          if (state.estadoRubrica.procedimientosSeleccionados
-                              .contains(actual.codigo)) {
-                            print("Unchecked");
-                            context.read<RubricaBloc>().add(
-                                ProcedimientoUnchecked(codigo: actual.codigo));
-                          }
-                        }
-                      });
-                },
-              ),
-            )
-          ],
-        );
-      },
+  Widget _procedimientos(BuildContext context, RubricaState state) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(height: 10),
+        TextField(
+          decoration: InputDecoration(
+            icon: Icon(Icons.search),
+            border: OutlineInputBorder(),
+            hintText: 'Buscar procedimientos',
+          ),
+          onChanged: (query) {
+            filtrarProcedimientos(query, context, state);
+          },
+        ),
+        SizedBox(height: 10),
+        Container(
+          height: 200,
+          constraints: BoxConstraints(maxHeight: 500),
+          child: ListView.builder(
+            physics: ClampingScrollPhysics(),
+            itemCount: state.procedimientosFiltrados.length,
+            itemBuilder: (context, index) {
+              PItem actual = state.procedimientosFiltrados.elementAt(index);
+              return CheckboxListTile(
+                  title: Text(actual.toString()),
+                  value: state.estadoRubrica.procedimientosSeleccionados
+                      .contains(actual),
+                  onChanged: (bool? value) {
+                    if (value != null && value) {
+                      if (!state.estadoRubrica.procedimientosSeleccionados
+                          .contains(actual)) {
+                        context
+                            .read<RubricaBloc>()
+                            .add(ProcedimientoChecked(item: actual));
+                      }
+                    } else if (value != null && !value) {
+                      if (state.estadoRubrica.procedimientosSeleccionados
+                          .contains(actual)) {
+                        context
+                            .read<RubricaBloc>()
+                            .add(ProcedimientoUnchecked(item: actual));
+                      }
+                    }
+                  });
+            },
+          ),
+        )
+      ],
     );
   }
 
-  Widget _patologias() {
-    return BlocBuilder<RubricaBloc, RubricaState>(
-      builder: (context, state) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(height: 10),
-            TextField(
-              decoration: InputDecoration(
-                icon: Icon(Icons.search),
-                border: OutlineInputBorder(),
-                hintText: 'Buscar patologias',
-              ),
-              onChanged: (query) {
-                filtrarPatologias(query, context, state);
-              },
-            ),
-            SizedBox(height: 10),
-            Container(
-              height: 200,
-              constraints: BoxConstraints(maxHeight: 500),
-              child: ListView.builder(
-                physics: ClampingScrollPhysics(),
-                itemCount: state.patologiasFiltradas.length,
-                itemBuilder: (context, index) {
-                  PItem actual = state.patologiasFiltradas.elementAt(index);
-                  return BlocBuilder<RubricaBloc, RubricaState>(
-                    builder: (context, state) {
-                      return CheckboxListTile(
-                          title: Text(actual.codigo + ' - ' + actual.nombre),
-                          value: state.estadoRubrica.patologiasSeleccionadas
-                              .contains(actual.codigo),
-                          onChanged: (bool? value) {
-                            if (value != null && value) {
-                              if (!state.estadoRubrica.patologiasSeleccionadas
-                                  .contains(actual.codigo)) {
-                                print("Checked");
-                                context.read<RubricaBloc>().add(
-                                    PatologiaChecked(codigo: actual.codigo));
-                              }
-                            } else if (value != null && !value) {
-                              if (state.estadoRubrica.patologiasSeleccionadas
-                                  .contains(actual.codigo)) {
-                                print("Unchecked");
-                                context.read<RubricaBloc>().add(
-                                    PatologiaUnchecked(codigo: actual.codigo));
-                              }
-                            }
-                          });
-                    },
-                  );
-                },
-              ),
-            )
-          ],
-        );
-      },
+  Widget _patologias(BuildContext context, RubricaState state) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(height: 10),
+        TextField(
+          decoration: InputDecoration(
+            icon: Icon(Icons.search),
+            border: OutlineInputBorder(),
+            hintText: 'Buscar patologias',
+          ),
+          onChanged: (query) {
+            filtrarPatologias(query, context, state);
+          },
+        ),
+        SizedBox(height: 10),
+        Container(
+          height: 200,
+          constraints: BoxConstraints(maxHeight: 500),
+          child: ListView.builder(
+            physics: ClampingScrollPhysics(),
+            itemCount: state.patologiasFiltradas.length,
+            itemBuilder: (context, index) {
+              PItem actual = state.patologiasFiltradas.elementAt(index);
+              return CheckboxListTile(
+                  title: Text(actual.toString()),
+                  value: state.estadoRubrica.patologiasSeleccionadas
+                      .contains(actual),
+                  onChanged: (bool? value) {
+                    if (value != null && value) {
+                      if (!state.estadoRubrica.patologiasSeleccionadas
+                          .contains(actual)) {
+                        context
+                            .read<RubricaBloc>()
+                            .add(PatologiaChecked(item: actual));
+                      }
+                    } else if (value != null && !value) {
+                      if (state.estadoRubrica.patologiasSeleccionadas
+                          .contains(actual)) {
+                        context
+                            .read<RubricaBloc>()
+                            .add(PatologiaUnchecked(item: actual));
+                      }
+                    }
+                  });
+            },
+          ),
+        )
+      ],
     );
   }
 
-  Widget _comentarioGeneral(context) {
+  Widget _comentarioGeneral(BuildContext context, RubricaState state) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 0, horizontal: 30),
       child: Column(
@@ -434,32 +371,35 @@ class RubricaScreen extends StatelessWidget {
             height: 10,
           ),
           SizedBox(
-            height: 100,
-            child: BlocBuilder<RubricaBloc, RubricaState>(
-              builder: (context, state) {
-                return TextFormField(
-                  expands: true,
-                  initialValue: state.estadoRubrica.comentarioGeneral,
-                  onChanged: (text) {
-                    context
-                        .read<RubricaBloc>()
-                        .add(ComentarioGeneralChanged(comentario: text));
-                  },
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  scrollController: ScrollController(),
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
+              height: 100,
+              child: TextFormField(
+                expands: true,
+                controller: TextEditingController.fromValue(
+                  TextEditingValue(
+                    text: state.estadoRubrica.comentarioGeneral,
+                    selection: TextSelection.collapsed(
+                      offset: state.estadoRubrica.comentarioGeneral.length,
+                    ),
                   ),
-                );
-              },
-            ),
-          ),
+                ),
+                onChanged: (text) {
+                  context
+                      .read<RubricaBloc>()
+                      .add(ComentarioGeneralChanged(comentario: text));
+                },
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                scrollController: ScrollController(),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                ),
+              )),
           SizedBox(
             height: 10,
           ),
           ElevatedButton(
               onPressed: () {
+                print(jsonEncode(curso));
                 Navigator.pop(context);
               },
               child: const Text('Finalizar'),
@@ -473,7 +413,7 @@ class RubricaScreen extends StatelessWidget {
 
   void filtrarProcedimientos(
       String query, BuildContext context, RubricaState state) {
-    final procedimientosFiltrados = procedimientos.where((procedimiento) {
+    final procedimientosFiltrados = state.procedimientos.where((procedimiento) {
       final procedimientoLower = procedimiento.toString().toLowerCase();
       final queryLower = query.toLowerCase();
       return procedimientoLower.contains(queryLower);
@@ -485,7 +425,7 @@ class RubricaScreen extends StatelessWidget {
 
   void filtrarPatologias(
       String query, BuildContext context, RubricaState state) {
-    final patologiasFiltradas = patologias.where((patologia) {
+    final patologiasFiltradas = state.patologias.where((patologia) {
       final patologiaLower = patologia.toString().toLowerCase();
       final queryLower = query.toLowerCase();
       return patologiaLower.contains(queryLower);

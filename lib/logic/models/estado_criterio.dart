@@ -17,6 +17,14 @@ class EstadoCriterio {
     );
   }
 
+  @override
+  String toString() {
+    return 'Estado Criterio: itemSeleccionado: ' +
+        itemSeleccionado.toString() +
+        ' comentario : ' +
+        comentario;
+  }
+
   factory EstadoCriterio.fromJson(Map<String, dynamic> json) =>
       _$EstadoCriterioFromJson(json);
   Map<String, dynamic> toJson() => _$EstadoCriterioToJson(this);
